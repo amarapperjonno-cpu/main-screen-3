@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="bn">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Madani Hifz — Home</title>
+  <style>
+    :root{
+      --green:#0a8f3d;
+      --green-dark:#077533;
+      --ash:#f2f2f2;
+      --ash-border:#dddddd;
+      --text:#111111;
+      --muted:#555555;
+      --bg:#ffffff;
+      --card:#ffffff;
+      --chip:#f7f7f7;
+      --star:#f7b500;
+      --divider:#eaeaea;
+      --shadow:0 2px 10px rgba(0,0,0,0.08);
+    }
+    [data-theme="dark"]{
+      --green:#0f9d58;
+      --green-dark:#0b7a44;
+      --ash:#1f1f1f;
+      --ash-border:#333;
+      --text:#e8e8e8;
+      --muted:#aaa;
+      --bg:#121212;
+      --card:#1a1a1a;
+      --chip:#222;
+      --star:#ffd257;
+      --divider:#2a2a2a;
+      --shadow:0 2px 12px rgba(0,0,0,0.3);
+    }
+    html,body{
+      margin:0;
+      padding:0;
+      height:100%;
+      background:var(--bg);
+      color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,"Noto Sans Bengali","SolaimanLipi","AdorshoLipi",sans-serif;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+    .top{position:fixed;top:0;left:0;right:0;z-index:1000}
+    .green-bar{
+      background:var(--green);color:#fff;display:flex;align-items:center;gap:.75rem;
+      padding:.75rem .75rem;box-shadow:var(--shadow)
+    }
+    .green-bar .hamburger, .green-bar .back-btn{font-size:1.4rem;cursor:pointer;line-height:1}
+    .green-bar .title{font-weight:700;letter-spacing:.2px;flex:1;text-align:center}
+    .green-bar .theme-toggle{cursor:pointer;font-size:1.2rem;line-height:1.2}
+    .spacer{height:72px}
+    .drawer{
+      position:fixed;top:0;left:-280px;bottom:0;width:280px;background:var(--card);
+      box-shadow:var(--shadow);transition:left .25s ease;z-index:1100;border-right:1px solid var(--divider);
+      overflow-y: auto;
+    }
+    .drawer.open{left:0}
+    .drawer-header{padding:1rem .9rem;border-bottom:1px solid var(--divider); display: flex; justify-content: flex-end;}
+    .drawer-item{padding:.9rem 1.1rem;cursor:pointer;display:flex;align-items:center;gap:1rem; font-weight: 500;}
+    .drawer-item:hover{background:var(--chip)}
+    .drawer-item .icon { font-size: 1.4rem; width: 28px; text-align: center; }
+    .backdrop{
+      position:fixed;inset:0;background:rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:opacity .2s;z-index:1050
+    }
+    .backdrop.show{opacity:1;pointer-events:auto}
+    .container{padding:1rem}
+    .home-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .menu-btn {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        background: var(--card);
+        border: 1px solid var(--divider);
+        border-radius: 12px;
+        padding: 1rem;
+        box-shadow: var(--shadow);
+        cursor: pointer;
+        transition: transform 0.15s ease;
+    }
+    .menu-btn:hover {
+        transform: translateY(-2px);
+    }
+    .menu-icon {
+        flex-shrink: 0;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: var(--chip);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        border: 2px solid var(--ash-border);
+    }
+    .menu-text { flex: 1; min-width: 0; }
+    .line-en { font-weight: 700; font-size: 1.05rem; }
+    .line-bn { font-size: 0.95rem; color: var(--muted); margin-top: .2rem; }
+    .overlay{
+      position:fixed;top:0;right:-100%;bottom:0;width:100%;background:var(--bg);
+      box-shadow:var(--shadow);transition:right .28s ease;z-index:1200;display:flex;flex-direction:column
+    }
+    .overlay.open{right:0}
+    
+    .overlay-body {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        font-family: "SolaimanLipi", "AdorshoLipi", sans-serif;
+        font-size: 17px;
+        color: var(--text);
+        line-height: 1.6;
+        text-align: justify;
+        padding: 1.5rem;
+    }
+    .overlay-body a {
+        color: #007bff !important;
+        text-decoration: underline;
+        font-weight: 600;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--ash-border);
+      border-top: 5px solid var(--green);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .refresh-btn {
+      background: var(--green);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 15px;
+      box-shadow: var(--shadow);
+    }
+    .refresh-btn:hover {
+      background: var(--green-dark);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top">
+    <div class="green-bar">
+      <div class="hamburger" id="hamburger" title="Menu">☰</div>
+      <div class="title">MADANI HIFZ</div>
+      <div class="theme-toggle" id="themeToggle" title="Light/Dark">🌙</div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+
+  <div class="drawer" id="drawer">
+    <div class="drawer-header">
+      <div class="theme-toggle" id="drawerThemeToggle" title="Light/Dark">🌙</div>
+    </div>
+    <a href="#" id="howToUseBtn" class="drawer-item">
+        <span class="icon">💡</span>
+        <span>How to use this app</span>
+    </a>
+    <a href="#" id="howToBeBenefitBtn" class="drawer-item">
+        <span class="icon">🏆</span>
+        <span>How to benefit from this app</span>
+    </a>
+    <a href="#" id="aboutBtn" class="drawer-item">
+        <span class="icon">ℹ️</span>
+        <span>About Us</span>
+    </a>
+   <a href="#" class="drawer-item" id="wa_link">
+    <span class="icon">📱</span>
+    <span>Contact us on WhatsApp</span>
+</a>
+    <a href="#" target="_blank" class="drawer-item" id="fb_link">
+    <span class="icon">👍</span>
+    <span>Like us on Facebook</span>
+</a>
+    <a href="#" target="_blank" class="drawer-item" id="yt_link">
+    <span class="icon">▶️</span>
+    <span>Subscribe us on YouTube</span>
+</a>
+  </div>
+  <div class="backdrop" id="backdrop"></div>
+
+  <main class="container">
+    <div class="home-menu">
+      <!-- ১. কুরআন -->
+      <a href="#" class="menu-btn" id="qp1">
+        <div class="menu-icon">📖</div>
+        <div class="menu-text">
+          <div class="line-en">Memorize Quran by Listening</div>
+          <div class="line-bn">শুনে শুনে কুরআন মুখস্ত করুন</div>
+        </div>
+      </a>
+      
+      <!-- ২. হাদিস -->
+      <a href="#" class="menu-btn" id="hp1">
+        <div class="menu-icon">📚</div>
+        <div class="menu-text">
+          <div class="line-en">Memorize Hadith by Listening</div>
+          <div class="line-bn">শুনে শুনে হাদিস মুখস্ত করুন</div>
+        </div>
+      </a>
+      
+      <!-- ৩. দুআ -->
+      <a href="#" class="menu-btn" id="dp1">
+        <div class="menu-icon">🕋</div>
+        <div class="menu-text">
+          <div class="line-en">Memorize Dua by Listening</div>
+          <div class="line-bn">শুনে শুনে দু'আ মুখস্ত করুন</div>
+        </div>
+      </a>
+      
+      <!-- ৪. মোনাজাত -->
+      <a href="#" class="menu-btn" id="mp1">
+        <div class="menu-icon">🤲</div>
+        <div class="menu-text">
+          <div class="line-en">Memorize Munajat by Listening</div>
+          <div class="line-bn">শুনে শুনে মোনাজাত মুখস্ত করুন</div>
+        </div>
+      </a>
+
+      <!-- ৫. তাফসীর -->
+      <a href="#" class="menu-btn" id="tp1">
+        <div class="menu-icon">🕌</div>
+        <div class="menu-text">
+          <div class="line-en">Memorize Tafsir by Listening</div>
+          <div class="line-bn">শুনে শুনে তাফসীর মুখস্ত করুন</div>
+        </div>
+      </a>
+
+      <!-- ৬. সিরাত -->
+      <a href="#" class="menu-btn" id="sp1">
+        <div class="menu-icon">📜</div>
+        <div class="menu-text">
+          <div class="line-en">Memorize Seerat by Listening</div>
+          <div class="line-bn">শুনে শুনে সিরাত মুখস্ত করুন</div>
+        </div>
+      </a>
+
+      <!-- ৭. নাশিদ -->
+      <a href="#" class="menu-btn" id="np1">
+        <div class="menu-icon">🗣️</div>
+        <div class="menu-text">
+          <div class="line-en">Memorize Nashid by Listening</div>
+          <div class="line-bn">শুনে শুনে নাশিদ মুখস্ত করুন</div>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <!-- স্ট্যাটাস ওভারলে স্ক্রিন -->
+  <section class="overlay" id="statusOverlay">
+    <div class="green-bar">
+      <div class="back-btn" data-target="statusOverlay" title="Back">←</div>
+      <div class="title" id="statusTitle">অপেক্ষা করুন</div>
+      <div style="width: 24px;"></div>
+    </div>
+    <div class="overlay-body" id="statusBody" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 1rem;">
+    </div>
+  </section>
+
+  <section class="overlay" id="aboutOverlay">
+    <div class="green-bar"><div class="back-btn" data-target="aboutOverlay" title="Back">←</div><div class="title">About Us</div><div style="width: 24px;"></div></div>
+    <div class="overlay-body" id="about_content">
+        <p>লোড হচ্ছে...</p>
+    </div> </section>
+
+  <section class="overlay" id="howToUseOverlay">
+    <div class="green-bar"><div class="back-btn" data-target="howToUseOverlay" title="Back">←</div><div class="title">How To Use</div><div style="width: 24px;"></div></div>
+    <div class="overlay-body" id="how_to_Use_content">
+        <p>লোড হচ্ছে...</p>
+    </div> </section>
+
+  <section class="overlay" id="howToBeBenefitOverlay">
+    <div class="green-bar"><div class="back-btn" data-target="howToBeBenefitOverlay" title="Back">←</div><div class="title">Benefits</div><div style="width: 24px;"></div></div>
+    <div class="overlay-body" id="benefits_content"> <p>লোড হচ্ছে...</p>
+    </div>
+  </section>
+
+  <script>
+    let currentTheme = localStorage.getItem("mh_theme") || "light";
+    const drawer = document.getElementById("drawer");
+    const backdrop = document.getElementById("backdrop");
+
+    function openDrawer() { drawer.classList.add("open"); backdrop.classList.add("show"); }
+    function closeDrawer() { drawer.classList.remove("open"); backdrop.classList.remove("show"); }
+    function toggleTheme() { setTheme(currentTheme === "light" ? "dark" : "light"); }
+    function setTheme(theme) {
+        currentTheme = theme; document.body.setAttribute("data-theme", theme); localStorage.setItem("mh_theme", theme);
+        const icon = theme === "dark" ? "☀️" : "🌙";
+        document.getElementById("themeToggle").textContent = icon;
+        document.getElementById("drawerThemeToggle").textContent = icon;
+    }
+    
+    setTheme(currentTheme);
+    document.getElementById("hamburger").addEventListener("click", openDrawer);
+    backdrop.addEventListener("click", closeDrawer);
+    document.getElementById("themeToggle").addEventListener("click", toggleTheme);
+    document.getElementById("drawerThemeToggle").addEventListener("click", toggleTheme);
+
+    const overlayButtons = [
+        { btnId: 'aboutBtn', overlayId: 'aboutOverlay' },
+        { btnId: 'howToUseBtn', overlayId: 'howToUseOverlay' },
+        { btnId: 'howToBeBenefitBtn', overlayId: 'howToBeBenefitOverlay' }
+    ];
+    overlayButtons.forEach(item => {
+        document.getElementById(item.btnId).addEventListener('click', e => {
+            e.preventDefault(); closeDrawer(); document.getElementById(item.overlayId).classList.add('open');
+        });
+    });
+    
+    document.querySelectorAll('.back-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById(btn.dataset.target).classList.remove('open');
+        });
+    });
+
+    document.addEventListener("keydown", e => { 
+        if (e.key === "Escape") {
+            const openOverlay = document.querySelector('.overlay.open');
+            if (openOverlay) { openOverlay.classList.remove('open'); }
+            else if (drawer.classList.contains('open')) { closeDrawer(); }
+        }
+    });
+
+const scriptUrl = "https://script.google.com/macros/s/AKfycbwEHm4t86wb0MuX4Qk2O1xLYTzUtjua6OzV2HWHrf0qspungby5eMM14pDf_gdh5sdFXw/exec";
+
+async function fetchDocData() {
+    try {
+        const response = await fetch(scriptUrl);
+        const data = await response.json();
+
+        if (data.contact_whatsapp) {
+            let phone = data.contact_whatsapp.replace(/\D/g, ''); 
+            if (phone.startsWith('0')) phone = '88' + phone; 
+
+            let waBtn = document.getElementById('wa_link');
+            waBtn.href = "https://wa.me/" + phone; 
+            waBtn.target = "_blank"; 
+
+            waBtn.addEventListener('click', function(e) {
+                if (window.AppInventor && window.AppInventor.setWebViewString) {
+                    e.preventDefault(); 
+                    window.AppInventor.setWebViewString("whatsapp:" + phone); 
+                }
+            });
+        }
+
+        if (data.facebook_link) {
+            let fbUrl = data.facebook_link.replace("<br>", "").trim();
+            document.getElementById('fb_link').href = fbUrl;
+        }
+
+        if (data.youtube_link) {
+            let ytUrl = data.youtube_link.replace("<br>", "").trim();
+            document.getElementById('yt_link').href = ytUrl;
+        }
+
+        if (data.about_us) document.getElementById('about_content').innerHTML = data.about_us;
+        if (data.how_to_use) document.getElementById('how_to_Use_content').innerHTML = data.how_to_use;
+        if (data.benefits) document.getElementById('benefits_content').innerHTML = data.benefits;
+        
+    } catch (e) {
+        console.log("Error: " + e);
+    } 
+}
+window.onload = fetchDocData;
+
+// --- বাটন লজিক ও সেফ এপিআই হ্যান্ডলিং ---
+const actionApiUrl = "https://script.google.com/macros/s/AKfycbz7X7XT7N2QUGT8-MIwpvsyTMbTXQ3-eMqE38fCwG0waAKcMmlfvYxqWiOEllMIZ5eSlA/exec";
+const buttonIds = ['qp1', 'hp1', 'dp1', 'mp1', 'tp1', 'sp1', 'np1'];
+
+buttonIds.forEach(id => {
+    const btn = document.getElementById(id);
+    if(btn) {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            playAudioFeature(id);
+        });
+    }
+});
+
+async function playAudioFeature(id) {
+    // ১. বাটন চাপার সাথে সাথে Kodular-কে অ্যাড দেখানোর সংকেত পাঠানো
+    if (window.AppInventor && window.AppInventor.setWebViewString) {
+        window.AppInventor.setWebViewString("show_add");
+    }
+
+    const overlay = document.getElementById('statusOverlay');
+    const title = document.getElementById('statusTitle');
+    const body = document.getElementById('statusBody');
+    
+    overlay.classList.add('open');
+    title.textContent = "লোড হচ্ছে...";
+    
+    body.innerHTML = `
+        <div class="spinner"></div>
+        <p style="font-weight: 600; font-size: 1.1rem; color: var(--text);">
+            আপনার অপেক্ষার মুহুর্তগুলো দরূদ শরীফ ও ইস্তেগফার দ্বারা সজ্জিত করুন।
+        </p>
+    `;
+    
+    try {
+        // নতুন প্যারামিটার সহ রিকোয়েস্ট পাঠানো
+        const response = await fetch(`${actionApiUrl}?id=${id}`);
+        
+        if (!response.ok) {
+            throw new Error("সার্ভার রেসপন্স কোড: " + response.status);
+        }
+        
+        // সেফলি টেক্সট হিসেবে রিড করা (যাতে ডিরেক্ট ক্র্যাশ না করে)
+        const textData = await response.text();
+        
+        let resData;
+        try {
+            resData = JSON.parse(textData);
+        } catch(err) {
+            throw new Error("গুগল স্ক্রিপ্ট থেকে সঠিক JSON ডাটা আসেনি। স্ক্রিপ্টটি চেক করুন।");
+        }
+        
+        // কন্ডিশন ১: লিঙ্ক ফাঁকা থাকলে
+        if (!resData.link || resData.link.trim() === "") {
+            title.textContent = "অনুপলব্ধ";
+            body.innerHTML = `
+                <p style="font-size: 1.1rem; font-weight: 500; padding: 1rem;">
+                    এই ফিচারটি এখনও চালু হয়নি, ইনশা আল্লাহ খুব শীঘ্রই আল্লাহ পাক এটা চালু করার তাওফীক দিবেন।
+                </p>
+            `;
+        } 
+        // কন্ডিশন ২: স্ট্যাটাস delay থাকলে
+        else if (resData.status === "delay") {
+            title.textContent = "দুঃখিত";
+            body.innerHTML = `
+                <p style="font-size: 1.1rem; font-weight: 500; padding: 1rem;">
+                    এই পেজটি অ্যাডমিন বন্ধ করে রেখাছেন। বিস্তারিত জানতে অ্যাডমিনের সাথে যোগাযোগ করুন।
+                </p>
+            `;
+        } 
+        // কন্ডিশন ৩: সবকিছু ঠিক থাকলে (running)
+        else if (resData.status === "running") {
+            window.location.href = resData.link; 
+        }
+        
+    } catch (error) {
+        console.error(error);
+        title.textContent = "নেটওয়ার্ক বা ডাটা ত্রুটি";
+        body.innerHTML = `
+            <p style="font-size: 1.1rem; font-weight: bold; color: #d9534f; padding: 0.5rem;">
+                আপনার ইন্টারনেট কানেকশন চেক করুন অথবা স্ক্রিপ্টটি পরীক্ষা করুন।
+            </p>
+            <p style="font-size: 0.9rem; color: var(--muted); max-width:90%;">
+                <b>ত্রুটির বিবরণ:</b> ${error.message}
+            </p>
+            <button class="refresh-btn" onclick="playAudioFeature('${id}')">🔄 পুনরায় চেষ্টা করুন</button>
+        `;
+    }
+}
+  </script>
+</body>
+</html>
